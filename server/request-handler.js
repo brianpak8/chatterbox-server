@@ -46,50 +46,51 @@ var requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
-
+  // console.log('Serving request type ' + request.method + ' for url ' + request.url);
+//console.log('this should show up');
   // The outgoing status.
   var statusCode = 200;
 
   if (request.url === '/classes/messages' && request.method === 'GET') {
-    console.log('================BEGIN GET===============');
-    console.log('G1/4 this is the storage array: ', storage);
-    console.log('G2/4 this is the statusCode: ', statusCode);
+    // console.log('================BEGIN GET===============');
+    // console.log('G1/4 this is the storage array: ', storage);
+    // console.log('G2/4 this is the statusCode: ', statusCode);
     
-    console.log('G3/4 this is the response body before stringify: ', response.body);
+    // console.log('G3/4 this is the response body before stringify: ', response.body);
     response.body = JSON.stringify({results: storage});
-    console.log(`G4/4 response's body property after stringify: `, response.body);
+    // console.log(`G4/4 response's body property after stringify: `, response.body);
     // console.log('0000000000000000', response.body);
-    console.log('===============END GET=================');
+    // console.log('===============END GET=================');
   } else if (request.url === '/classes/messages' && request.method === 'POST') {
-    console.log('===============BEGIN POST=============');
+    // console.log('===============BEGIN POST=============');
     
-    console.log('P1/10 free-floating body before any post work: ', body);
     var body = [];
+    // console.log('P1/10 free-floating body before any post work: ', body);
     request.on('data', function(chunk) {
-      console.log('P2/10  chunk sent: ', chunk);
+      // console.log('P2/10  chunk sent: ', chunk);
       body.push(chunk);
-      console.log('P3/10  body after pushing chunk: ', body)
+      // console.log('P3/10  body after pushing chunk: ', body);
     });
     request.on('end', function() {
       body = Buffer.concat(body).toString();
-      console.log('P4/10  body after buffering and stringing chunk: ', body);
-      response.end(body);
-      console.log('P5/10  storage before body is pushed: ', storage);
+      body = JSON.parse(body);
+      // console.log('P4/10  body after buffering and stringing chunk: ', body);
+      //  response.end(body);
+      // console.log('P5/10  storage before body is pushed: ', storage);
       
       storage.push(body);
-      console.log(`P6/10 storage after body is pushed: `, storage);
+      // console.log(`P6/10 storage after body is pushed: `, storage);
     });
     
-    console.log(`P7/10 response.body before stringify: `, response.body);
+    // console.log(`P7/10 response.body before stringify: `, response.body);
     response.body = JSON.stringify({results: storage});
-    console.log(`P8/10 response.body after stringify: `, response.body);
-    console.log('P9/10 this is the status code before setting it: ', statusCode);
+    // console.log(`P8/10 response.body after stringify: `, response.body);
+    // console.log('P9/10 this is the status code before setting it: ', statusCode);
     statusCode = 201;
-    console.log('P10/10 this is the status code after setting it: ', statusCode);
-    console.log('============END POST===============');
+    // console.log('P10/10 this is the status code after setting it: ', statusCode);
+    // console.log('============END POST===============');
   } else if (request.url !== '/classes/messages') {
-    console.log('!!!!!!!!!!!NOT SENT TO /classes/messages!!!!!!!!!!');
+    // console.log('!!!!!!!!!!!NOT SENT TO /classes/messages!!!!!!!!!!');
     statusCode = 404;
   }
 
@@ -126,14 +127,14 @@ var requestHandler = function(request, response) {
 
 
 
-  console.log(`PRE-RES.END1/3: response.body: `, response.body);
-  console.log(`PRE-RES.END2/3: response.statusCode: `, response.statusCode,);
-  console.log(`PRE-RES.END3/3: free floating headers: `, headers);
-  
+  // console.log(`PRE-RES.END1/3: response.body: `, response.body);
+  // console.log(`PRE-RES.END2/3: response.statusCode: `, response.statusCode);
+  // console.log(`PRE-RES.END3/3: free floating headers: `, headers);
+  console.log(storage); // expecting a string
   response.end(response.body);
-  console.log(`POST-RES.END1/3: response.body: `, response.body);
-  console.log(`POST-RES.END2/3: response.statusCode: `, response.statusCode,);
-  console.log(`POST-RES.END3/3: free floating headers: `, headers);
+  // console.log(`POST-RES.END1/3: response.body: `, response.body);
+  // console.log(`POST-RES.END2/3: response.statusCode: `, response.statusCode);
+  // console.log(`POST-RES.END3/3: free floating headers: `, headers);
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
