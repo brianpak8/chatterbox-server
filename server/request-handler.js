@@ -12,24 +12,24 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var storage = [{
-      username: 'Jono',
-      message: 'Do my bidding!'
-    }];
+  username: 'Jono',
+  message: 'Do my bidding!'
+}];
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   
   
   // Create custom request event handler
-    //routes and URLS (rooms)
-      //GETS
-      //POSTS
+  //routes and URLS (rooms)
+  //GETS
+  //POSTS
       
   // Create container array to hold messages
 
   // Create custom response based on the Request
 
   // Handle error control flow
-    //Set response statuscode to 404 for unrecognized URLs
+  //Set response statuscode to 404 for unrecognized URLs
 
 
   // They include information about both the incoming request, such as
@@ -50,13 +50,13 @@ var requestHandler = function(request, response) {
   var statusCode = 200;
 
   if (request.url === '/classes/messages' && request.method === 'GET') {
-    console.log('success');
     
     response.body = JSON.stringify({results: storage});
    
     console.log(storage);
     console.log('0000000000000000', response.body);
   } else if (request.url === '/classes/messages' && request.method === 'POST') {
+    console.log('========================', request);
     storage.push(request.body);
     response.body = JSON.stringify({results: storage});
     statusCode = 201;
@@ -66,6 +66,12 @@ var requestHandler = function(request, response) {
 
 
   // See the note below about CORS headers.
+  var defaultCorsHeaders = {
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'access-control-allow-headers': 'content-type, accept',
+    'access-control-max-age': 10 // Seconds.
+  };
   var headers = defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
@@ -103,12 +109,7 @@ var requestHandler = function(request, response) {
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10 // Seconds.
-};
+
 // function stringifyStorage() {
 //   return JSON.stringify({results: storage});
 // }
