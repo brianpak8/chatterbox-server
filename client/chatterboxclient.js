@@ -1,13 +1,16 @@
-var SERVER_URL = '127.0.0.1:3000';
+var SERVER_URL = 'http://127.0.0.1:3000/classes/messages';
 
 //This one calls the Parse server to grab data, and sends it to processData
 var getData = function() {
-  $.ajax(SERVER_URL + '?order=-createdAt', {
+  console.log('getData invoked!');
+  $.ajax(SERVER_URL, {
     contentType: 'application/json',
     success: function(data) {
+      console.log('getData: success!');
       processData(data); // eslint-disable-line no-use-before-define
     },
     error: function(data) {
+      console.log('getData: error!');
       $('#error').prepend(' oh no').append('!');
     }
   });
@@ -99,6 +102,7 @@ var displayData = function(data, user) {
 var postData = function(message, username) {
   //  This function sends messages to the server.  It makes an ajax post requests
   //  sending the message in the data property
+  console.log('postData invoked')
   $.ajax({
     url: SERVER_URL,
     contentType: 'application/json',
@@ -108,11 +112,11 @@ var postData = function(message, username) {
       text: message
     }),
     success: function(data) {
-      console.log('Success!', data);
+      console.log('postData Success!', data);
       getData();
     },
     error: function(data) {
-      console.log(data);
+      console.log('postData FAIL!', data);
     }
   });
 };

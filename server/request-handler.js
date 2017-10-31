@@ -11,10 +11,12 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var storage = [{
-  username: 'Jono',
-  message: 'Do my bidding!'
-}];
+var storage = [
+  // {
+  //   username: 'Jono',
+  //   message: 'Do my bidding!'
+  // }
+];
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   
@@ -50,17 +52,44 @@ var requestHandler = function(request, response) {
   var statusCode = 200;
 
   if (request.url === '/classes/messages' && request.method === 'GET') {
+    console.log('================BEGIN GET===============');
+    console.log('G1/4 this is the storage array: ', storage);
+    console.log('G2/4 this is the statusCode: ', statusCode);
     
+    console.log('G3/4 this is the response body before stringify: ', response.body);
     response.body = JSON.stringify({results: storage});
-   
-    console.log(storage);
-    console.log('0000000000000000', response.body);
+    console.log(`G4/4 response's body property after stringify: `, response.body);
+    // console.log('0000000000000000', response.body);
+    console.log('===============END GET=================');
   } else if (request.url === '/classes/messages' && request.method === 'POST') {
-    console.log('========================', request);
-    storage.push(request.body);
+    console.log('===============BEGIN POST=============');
+    
+    console.log('P1/10 free-floating body before any post work: ', body);
+    var body = [];
+    request.on('data', function(chunk) {
+      console.log('P2/10  chunk sent: ', chunk);
+      body.push(chunk);
+      console.log('P3/10  body after pushing chunk: ', body)
+    });
+    request.on('end', function() {
+      body = Buffer.concat(body).toString();
+      console.log('P4/10  body after buffering and stringing chunk: ', body);
+      response.end(body);
+      console.log('P5/10  storage before body is pushed: ', storage);
+      
+      storage.push(body);
+      console.log(`P6/10 storage after body is pushed: `, storage);
+    });
+    
+    console.log(`P7/10 response.body before stringify: `, response.body);
     response.body = JSON.stringify({results: storage});
+    console.log(`P8/10 response.body after stringify: `, response.body);
+    console.log('P9/10 this is the status code before setting it: ', statusCode);
     statusCode = 201;
+    console.log('P10/10 this is the status code after setting it: ', statusCode);
+    console.log('============END POST===============');
   } else if (request.url !== '/classes/messages') {
+    console.log('!!!!!!!!!!!NOT SENT TO /classes/messages!!!!!!!!!!');
     statusCode = 404;
   }
 
@@ -78,7 +107,8 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  // headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/JSON';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -96,8 +126,14 @@ var requestHandler = function(request, response) {
 
 
 
-
+  console.log(`PRE-RES.END1/3: response.body: `, response.body);
+  console.log(`PRE-RES.END2/3: response.statusCode: `, response.statusCode,);
+  console.log(`PRE-RES.END3/3: free floating headers: `, headers);
+  
   response.end(response.body);
+  console.log(`POST-RES.END1/3: response.body: `, response.body);
+  console.log(`POST-RES.END2/3: response.statusCode: `, response.statusCode,);
+  console.log(`POST-RES.END3/3: free floating headers: `, headers);
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
