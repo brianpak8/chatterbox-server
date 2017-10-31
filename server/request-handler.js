@@ -17,9 +17,17 @@ var storage = [
   //   message: 'Do my bidding!'
   // }
 ];
+
+var CorsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-headers': 'content-type, accept',
+  'access-control-max-age': 10 // Seconds.
+};
+
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
-  
+  console.log(request.headers);
   
   // Create custom request event handler
   //routes and URLS (rooms)
@@ -47,7 +55,7 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   // console.log('Serving request type ' + request.method + ' for url ' + request.url);
-//console.log('this should show up');
+  //console.log('this should show up');
   // The outgoing status.
   var statusCode = 200;
 
@@ -73,13 +81,22 @@ var requestHandler = function(request, response) {
     });
     request.on('end', function() {
       body = Buffer.concat(body).toString();
-      body = JSON.parse(body);
-      // console.log('P4/10  body after buffering and stringing chunk: ', body);
-      //  response.end(body);
-      // console.log('P5/10  storage before body is pushed: ', storage);
+      var censored = body.replace(/fuck|damn/i, 'Hack Reactor does not condone the use of foul language.  Please wash your mouth with extra soap');
+      console.log('=======================================================');
+      console.log(censored);
+      console.log(body);
+      if (censored !== body) {
+        storage.push(JSON.parse(censored));
+      } else {
+        body = JSON.parse(body);
+        // console.log('P4/10  body after buffering and stringing chunk: ', body);
+        //  response.end(body);
+        // console.log('P5/10  storage before body is pushed: ', storage);
       
-      storage.push(body);
+        storage.push(body);
       // console.log(`P6/10 storage after body is pushed: `, storage);
+      }
+      
     });
     
     // console.log(`P7/10 response.body before stringify: `, response.body);
@@ -89,6 +106,11 @@ var requestHandler = function(request, response) {
     statusCode = 201;
     // console.log('P10/10 this is the status code after setting it: ', statusCode);
     // console.log('============END POST===============');
+  } else if (request.method === 'DELETE') { 
+    statusCode = 405;
+    console.log(statusCode, 'client attempted a delete method ************');
+    response.writeHead(statusCode, CorsHeaders);
+    response.end();
   } else if (request.url !== '/classes/messages') {
     // console.log('!!!!!!!!!!!NOT SENT TO /classes/messages!!!!!!!!!!');
     statusCode = 404;

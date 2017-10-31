@@ -74,5 +74,22 @@ describe('server', function() {
     });
   });
 
+  xit('should respond to DELETE requests for /classes/messages with a 405 status code', function(done) {
+  // to fix: refactor boilerplate code (headers etc. and put into if conditionals)
+    var requestParams = {method: 'DELETE',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      // json: {
+      //   username: 'Jono',
+      //   message: 'Do my bidding!'}
+    };
+    request(requestParams, function(error, response, body) {
+      request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+        expect(response.statusCode).to.equal(405);
+        done();
+      });
+    });
+    
+  });
+
 
 });
