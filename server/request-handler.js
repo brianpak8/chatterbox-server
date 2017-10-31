@@ -11,10 +11,27 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var storage = [{
+      username: 'Jono',
+      message: 'Do my bidding!'
+    }];
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
-  //
+  
+  
+  // Create custom request event handler
+    //routes and URLS (rooms)
+      //GETS
+      //POSTS
+      
+  // Create container array to hold messages
+
+  // Create custom response based on the Request
+
+  // Handle error control flow
+    //Set response statuscode to 404 for unrecognized URLs
+
+
   // They include information about both the incoming request, such as
   // headers and URL, and about the outgoing response, such as its status
   // and content.
@@ -31,6 +48,22 @@ var requestHandler = function(request, response) {
 
   // The outgoing status.
   var statusCode = 200;
+
+  if (request.url === '/classes/messages' && request.method === 'GET') {
+    console.log('success');
+    
+    response.body = JSON.stringify({results: storage});
+   
+    console.log(storage);
+    console.log('0000000000000000', response.body);
+  } else if (request.url === '/classes/messages' && request.method === 'POST') {
+    storage.push(request.body);
+    response.body = JSON.stringify({results: storage});
+    statusCode = 201;
+  } else if (request.url !== '/classes/messages') {
+    statusCode = 404;
+  }
+
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -52,7 +85,13 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+
+
+
+
+
+
+  response.end(response.body);
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -70,4 +109,9 @@ var defaultCorsHeaders = {
   'access-control-allow-headers': 'content-type, accept',
   'access-control-max-age': 10 // Seconds.
 };
+// function stringifyStorage() {
+//   return JSON.stringify({results: storage});
+// }
+exports.requestHandler = requestHandler;
+
 
