@@ -57,7 +57,7 @@ var requestHandler = function(request, response) {
     // console.log('G2/4 this is the statusCode: ', statusCode);
     
     // console.log('G3/4 this is the response body before stringify: ', response.body);
-    response.body = JSON.stringify({results: storage});
+    response.body = JSON.stringify({results: storage}); 
     // console.log(`G4/4 response's body property after stringify: `, response.body);
     // console.log('0000000000000000', response.body);
     // console.log('===============END GET=================');

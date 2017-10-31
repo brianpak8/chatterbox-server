@@ -7,6 +7,7 @@ var getData = function() {
     contentType: 'application/json',
     success: function(data) {
       console.log('getData: success!');
+      data = JSON.parse(data);
       processData(data); // eslint-disable-line no-use-before-define
     },
     error: function(data) {
@@ -18,6 +19,7 @@ var getData = function() {
 
 // Here we sort the server messages by 'Created at' and send them to displayData
 var processData = function(data) {
+  console.log('222222222222222222222', data.results);
   var sortedData = data.results.sort(function(a, b) {
     var aDate = new Date(a.createdAt);
     var bDate = new Date(b.createdAt);
@@ -102,7 +104,7 @@ var displayData = function(data, user) {
 var postData = function(message, username) {
   //  This function sends messages to the server.  It makes an ajax post requests
   //  sending the message in the data property
-  console.log('postData invoked')
+  console.log('postData invoked');
   $.ajax({
     url: SERVER_URL,
     contentType: 'application/json',
