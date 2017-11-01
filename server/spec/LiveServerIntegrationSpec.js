@@ -91,5 +91,23 @@ describe('server', function() {
     
   });
 
+  it('should censor banned words and disregard case', function(done) {
+    var requestParams = {method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Jono',
+        message: 'DAmN'}
+    };
+
+    request(requestParams, function(error, response, body) {
+    // console.log('what would happen if i log something in here')
+      // Now if we request the log, that message we posted should be there:
+      request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+        var messages = JSON.parse(body).results;
+        expect(messages[messages.length - 1].message).to.equal('Hack Reactor does not condone the use of foul language.  Please wash your mouth with extra soap');
+        done();
+      });
+    });
+  });
 
 });
